@@ -1,3 +1,5 @@
+using IdentityFunction.Entity;
+using IdentityFunction.Requests;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -17,14 +19,19 @@ namespace IdentityFunction
         }
 
         [Function("CreateUser")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous,  "Post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous,  "Post")] HttpRequestData req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("Start processing request...");
+
+            var request = await req.ReadFromJsonAsync<CreateUser>();
+            var user = User.Create(request.FirstName, request.LastName, request.Email);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add(HeaderNames.ContentType, MediaTypeNames.Text.Plain);
 
-            response.WriteStringAsync("Welcome to Azure Functions!");
+            _logger.LogInformation("Some logic to register account");
+
+            await response.WriteStringAsync("Account is registered, welcome in our family");
 
             return response;
         }
