@@ -1,4 +1,5 @@
 using IdentityFunction.Entity;
+using IdentityFunction.Exceptions;
 using IdentityFunction.Requests;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -19,19 +20,31 @@ namespace IdentityFunction
         }
 
         [Function("CreateUser")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous,  "Post")] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "Post")] HttpRequestData req)
         {
-            _logger.LogInformation("Start processing request...");
+            try
+            {
+                _logger.LogInformation("Start processing request...");
 
-            var request = await req.ReadFromJsonAsync<CreateUser>();
-            var user = User.Create(request.FirstName, request.LastName, request.Email);
+                var request = await req.ReadFromJsonAsync<CreateUser>();
+                var user = User.Create(request.FirstName, request.LastName, request.Email);
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
+                _logger.LogInformation("Some logic to register account");
+
+                return await GetResponse(req, HttpStatusCode.OK, "Account is registered, welcome in our family");
+            }
+            catch (CustomException ex)
+            {
+                _logger.LogError(ex.ToString());
+                return await GetResponse(req, HttpStatusCode.BadRequest, ex.Message);
+            }
+        }
+
+        private async Task<HttpResponseData> GetResponse(HttpRequestData request, HttpStatusCode statusCode, string message)
+        {
+            var response = request.CreateResponse(statusCode);
             response.Headers.Add(HeaderNames.ContentType, MediaTypeNames.Text.Plain);
-
-            _logger.LogInformation("Some logic to register account");
-
-            await response.WriteStringAsync("Account is registered, welcome in our family");
+            await response.WriteStringAsync(message);
 
             return response;
         }
