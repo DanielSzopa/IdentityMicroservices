@@ -1,7 +1,9 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using System.Net;
+using System.Net.Mime;
 
 namespace IdentityFunction
 {
@@ -20,9 +22,9 @@ namespace IdentityFunction
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
             var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+            response.Headers.Add(HeaderNames.ContentType, MediaTypeNames.Text.Plain);
 
-            response.WriteString("Welcome to Azure Functions!");
+            response.WriteStringAsync("Welcome to Azure Functions!");
 
             return response;
         }
