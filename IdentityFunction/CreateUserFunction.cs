@@ -14,12 +14,12 @@ namespace IdentityFunction
 {
     public class CreateUserFunction
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<CreateUserFunction> _logger;
         private readonly ServiceBusSettings _serviceBusSettings;
 
-        public CreateUserFunction(ILoggerFactory loggerFactory, IOptions<ServiceBusSettings> serviceBusSettings)
+        public CreateUserFunction(ILogger<CreateUserFunction> logger, IOptions<ServiceBusSettings> serviceBusSettings)
         {
-            _logger = loggerFactory.CreateLogger<CreateUserFunction>();
+            _logger = logger;
             _serviceBusSettings = serviceBusSettings.Value;
         }
 
