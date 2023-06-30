@@ -3,6 +3,7 @@ using IdentityFunction.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, builder) =>
@@ -12,6 +13,7 @@ var host = new HostBuilder()
         builder
         .AddJsonFile(configPath, false, true)
         .AddEnvironmentVariables()
+        .AddUserSecrets(Assembly.GetExecutingAssembly(), false, true)
         .Build();
     })
     .ConfigureServices((context, builder) =>
