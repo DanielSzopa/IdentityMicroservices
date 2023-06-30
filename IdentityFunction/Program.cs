@@ -1,5 +1,7 @@
 using IdentityFunction.Middlewares;
+using IdentityFunction.Settings;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
@@ -9,7 +11,14 @@ var host = new HostBuilder()
 
         builder
         .AddJsonFile(configPath, false, true)
-        .AddEnvironmentVariables();
+        .AddEnvironmentVariables()
+        .Build();
+    })
+    .ConfigureServices((context, builder) =>
+    {
+        builder
+        .AddOptions<ServiceBusSettings>()
+        .Bind(context.Configuration.GetSection(ServiceBusSettings.SectionName));
     })
     .ConfigureFunctionsWorkerDefaults(builder =>
     {
