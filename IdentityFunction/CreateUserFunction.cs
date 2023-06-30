@@ -1,5 +1,6 @@
 using IdentityFunction.Entity;
 using IdentityFunction.Exceptions;
+using IdentityFunction.Models;
 using IdentityFunction.Requests;
 using IdentityFunction.Settings;
 using Microsoft.Azure.Functions.Worker;
@@ -34,6 +35,8 @@ namespace IdentityFunction
                 var user = User.Create(request.FirstName, request.LastName, request.Email);
 
                 _logger.LogInformation("Some logic to register account");
+
+                var serviceBusOutput = ServiceBusOutput.Create(user, request.IsNewsletterSubscriber);
 
                 return await GetResponse(req, HttpStatusCode.OK, "Account is registered, welcome in our family");
             }
