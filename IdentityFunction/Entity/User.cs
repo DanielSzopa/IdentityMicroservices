@@ -10,7 +10,9 @@ internal class User
 
     private User(FirstName firstName, LastName lastName, Email email)
     {
-
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
     }
 
     internal static User Create(FirstName firstName, LastName lastName, Email email)

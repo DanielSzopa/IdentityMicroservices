@@ -1,6 +1,8 @@
 using IdentityFunction.Entity;
 using IdentityFunction.Exceptions;
+using IdentityFunction.Models;
 using IdentityFunction.Requests;
+using IdentityFunction.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -12,11 +14,13 @@ namespace IdentityFunction
 {
     public class CreateUserFunction
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<CreateUserFunction> _logger;
+        private readonly IServiceBusSender _serviceBusSender;
 
-        public CreateUserFunction(ILoggerFactory loggerFactory)
+        public CreateUserFunction(ILogger<CreateUserFunction> logger, IServiceBusSender serviceBusSender)
         {
-            _logger = loggerFactory.CreateLogger<CreateUserFunction>();
+            _logger = logger;
+            _serviceBusSender = serviceBusSender;
         }
 
         [Function("CreateUser")]
@@ -29,7 +33,12 @@ namespace IdentityFunction
                 var request = await req.ReadFromJsonAsync<CreateUser>();
                 var user = User.Create(request.FirstName, request.LastName, request.Email);
 
-                _logger.LogInformation("Some logic to register account");
+                _logger.LogInformation("Some logic to register account...");
+
+                var serviceBusOutput = ServiceBusOutput.Create(user);
+                await _serviceBusSender.SendAsync(serviceBusOutput, request.IsNewsletterSubscriber);
+
+                _logger.LogInformation("ServiceBus message was sent");
 
                 return await GetResponse(req, HttpStatusCode.OK, "Account is registered, welcome in our family");
             }
