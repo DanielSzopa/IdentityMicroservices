@@ -33,10 +33,12 @@ namespace IdentityFunction
                 var request = await req.ReadFromJsonAsync<CreateUser>();
                 var user = User.Create(request.FirstName, request.LastName, request.Email);
 
-                _logger.LogInformation("Some logic to register account");
+                _logger.LogInformation("Some logic to register account...");
 
-                var serviceBusOutput = ServiceBusOutput.Create(user, request.IsNewsletterSubscriber);
+                var serviceBusOutput = ServiceBusOutput.Create(user);
                 await _serviceBusSender.SendAsync(serviceBusOutput, request.IsNewsletterSubscriber);
+
+                _logger.LogInformation("ServiceBus message was sent");
 
                 return await GetResponse(req, HttpStatusCode.OK, "Account is registered, welcome in our family");
             }
