@@ -22,8 +22,8 @@ namespace IdentityFunction.ServiceBus
                 ContentType = MediaTypeNames.Application.Json,
             };
 
-            if (isNewsletterSubscriber)
-                serviceBusMessage.Subject = _serviceBusSettings.NewsletterSubject;
+            serviceBusMessage.ApplicationProperties
+                .Add(_serviceBusSettings.NewsletterFilterKey, isNewsletterSubscriber.ToString());
 
             var sender = client.CreateSender(_serviceBusSettings.PartnerTopic);
             await sender.SendMessageAsync(serviceBusMessage);
