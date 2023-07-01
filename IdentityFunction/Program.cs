@@ -1,4 +1,5 @@
 using IdentityFunction.Middlewares;
+using IdentityFunction.ServiceBus;
 using IdentityFunction.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,8 @@ var host = new HostBuilder()
         builder
         .AddOptions<ServiceBusSettings>()
         .Bind(context.Configuration.GetSection(ServiceBusSettings.SectionName));
+
+        builder.AddSingleton<IServiceBusSender, ServiceBusSender>();
     })
     .ConfigureFunctionsWorkerDefaults(builder =>
     {

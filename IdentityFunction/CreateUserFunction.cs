@@ -2,11 +2,10 @@ using IdentityFunction.Entity;
 using IdentityFunction.Exceptions;
 using IdentityFunction.Models;
 using IdentityFunction.Requests;
-using IdentityFunction.Settings;
+using IdentityFunction.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Mime;
@@ -16,12 +15,12 @@ namespace IdentityFunction
     public class CreateUserFunction
     {
         private readonly ILogger<CreateUserFunction> _logger;
-        private readonly ServiceBusSettings _serviceBusSettings;
+        private readonly IServiceBusSender _serviceBusSender;
 
-        public CreateUserFunction(ILogger<CreateUserFunction> logger, IOptions<ServiceBusSettings> serviceBusSettings)
+        public CreateUserFunction(ILogger<CreateUserFunction> logger, IServiceBusSender serviceBusSender)
         {
             _logger = logger;
-            _serviceBusSettings = serviceBusSettings.Value;
+            _serviceBusSender = serviceBusSender;
         }
 
         [Function("CreateUser")]
@@ -37,6 +36,7 @@ namespace IdentityFunction
                 _logger.LogInformation("Some logic to register account");
 
                 var serviceBusOutput = ServiceBusOutput.Create(user, request.IsNewsletterSubscriber);
+                await _serviceBusSender.SendAsync(serviceBusOutput, request.IsNewsletterSubscriber);
 
                 return await GetResponse(req, HttpStatusCode.OK, "Account is registered, welcome in our family");
             }
@@ -47,7 +47,7 @@ namespace IdentityFunction
             }
         }
 
-            private async Task<HttpResponseData> GetResponse(HttpRequestData request, HttpStatusCode statusCode, string message)
+        private async Task<HttpResponseData> GetResponse(HttpRequestData request, HttpStatusCode statusCode, string message)
         {
             var response = request.CreateResponse(statusCode);
             response.Headers.Add(HeaderNames.ContentType, MediaTypeNames.Text.Plain);
