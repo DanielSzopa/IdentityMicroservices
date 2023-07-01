@@ -14,7 +14,7 @@ var host = new HostBuilder()
         builder
         .AddJsonFile(configPath, false, true)
         .AddEnvironmentVariables()
-        .AddUserSecrets(Assembly.GetExecutingAssembly(), false, true)
+        .AddUserSecrets(Assembly.GetExecutingAssembly(), true, true)
         .Build();
     })
     .ConfigureServices((context, builder) =>
