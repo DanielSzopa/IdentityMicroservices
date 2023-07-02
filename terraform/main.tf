@@ -38,13 +38,13 @@ module "serviceBus" {
 }
 
 module "createUser_fapp" {
-  source                               = "./modules/functionApp"
-  resource_group_name                  = azurerm_resource_group.rg.name
-  resource_group_location              = azurerm_resource_group.rg.location
-  short_location                       = local.short_location
-  createUser_fapp_storage_account_name = local.createUser_fapp_storage_account_name
-  createUser_service_plan_name         = local.createUser_service_plan_name
-  createUser_fapp_name                 = local.createUser_fapp_name
+  source                    = "./modules/functionApp"
+  resource_group_name       = azurerm_resource_group.rg.name
+  resource_group_location   = azurerm_resource_group.rg.location
+  short_location            = local.short_location
+  fapp_storage_account_name = local.createUser_fapp_storage_account_name
+  service_plan_name         = local.createUser_service_plan_name
+  fapp_name                 = local.createUser_fapp_name
   app_settings = {
     "ServiceBus:ConnectionString" = module.serviceBus.servicebus_default_primary_connection_string
   }

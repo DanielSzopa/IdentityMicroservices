@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "storage_acocunt" {
-  name                     = var.createUser_fapp_storage_account_name
+  name                     = var.fapp_storage_account_name
   resource_group_name      = var.resource_group_name
   location                 = var.resource_group_location
   account_tier             = "Standard"
@@ -7,7 +7,7 @@ resource "azurerm_storage_account" "storage_acocunt" {
 }
 
 resource "azurerm_service_plan" "service_plan" {
-  name                = var.createUser_service_plan_name
+  name                = var.service_plan_name
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   os_type             = "Windows"
@@ -15,7 +15,7 @@ resource "azurerm_service_plan" "service_plan" {
 }
 
 resource "azurerm_windows_function_app" "function_app" {
-  name                       = var.createUser_fapp_name
+  name                       = var.fapp_name
   resource_group_name        = var.resource_group_name
   location                   = var.resource_group_location
   storage_account_name       = azurerm_storage_account.storage_acocunt.name
