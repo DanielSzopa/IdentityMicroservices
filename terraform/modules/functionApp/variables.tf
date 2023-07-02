@@ -22,6 +22,6 @@ variable "createUser_fapp_name" {
   type = string
 }
 
-variable "serviceBus_default_primary_connection_string" {
-  type = string
+variable "app_settings" {
+  type = map(string)
 }

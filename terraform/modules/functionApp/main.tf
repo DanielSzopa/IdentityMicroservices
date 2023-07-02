@@ -29,7 +29,5 @@ resource "azurerm_windows_function_app" "function_app" {
     }
   }
 
-  app_settings = {
-    "ServiceBus:ConnectionString" = var.serviceBus_default_primary_connection_string
-  }
+  app_settings = var.app_settings
 }
