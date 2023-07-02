@@ -23,3 +23,17 @@ module "identity_fapp" {
     "ServiceBus:ConnectionString" = module.serviceBus.servicebus_default_primary_connection_string
   }
 }
+
+module "notyfication_fapp" {
+  source                    = "./modules/functionApp"
+  resource_group_name       = azurerm_resource_group.rg.name
+  resource_group_location   = azurerm_resource_group.rg.location
+  short_location            = local.short_location
+  fapp_storage_account_name = local.notyfication_fapp_storage_account_name
+  service_plan_name         = local.notyfication_service_plan_name
+  fapp_name                 = local.notyfication_fapp_name
+  app_settings = {
+    "ServiceBusConnection" = module.serviceBus.servicebus_default_primary_connection_string
+    "SendGrid:ApiKey"      = var.sendGrid_api_key
+  }
+}
