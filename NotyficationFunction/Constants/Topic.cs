@@ -2,6 +2,6 @@
 {
     internal class Topic
     {
-        internal const string Notyfication = "notyfication";
+        internal const string Notyfication = "notyfications";
     }
 }

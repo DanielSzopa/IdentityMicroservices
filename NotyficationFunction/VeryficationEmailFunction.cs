@@ -14,7 +14,7 @@ namespace NotyficationFunction
         }
 
         [Function("VeryficationEmail")]
-        public void Run([ServiceBusTrigger(Topic.Notyfication, Subscription.VeryficationEmail, Connection = "")] string mySbMsg)
+        public void Run([ServiceBusTrigger(Topic.Notyfication, Subscription.VeryficationEmail, Connection = "ServiceBusConnection")] string mySbMsg)
         {
             _logger.LogInformation($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
         }
