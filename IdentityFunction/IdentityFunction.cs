@@ -23,7 +23,7 @@ namespace IdentityFunction
             _serviceBusSender = serviceBusSender;
         }
 
-        [Function("CreateUser")]
+        [Function("Identity")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "Post")] HttpRequestData req)
         {
             try
