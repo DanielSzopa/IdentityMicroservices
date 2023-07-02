@@ -1,45 +1,40 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "3.62.0"
+    }
+  }
+
+  backend "azurerm" {
+    resource_group_name  = "identityservicesstaterg"
+    storage_account_name = "identityservicesstatesa"
+    container_name       = "state"
+    key                  = "identity.tfstate"
+  }
+
+  required_version = "~> 1.4.6"
+}
+
+provider "azurerm" {
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
+}
+
 resource "azurerm_resource_group" "rg" {
   name     = local.resource_group_name
   location = local.location
 }
 
-resource "azurerm_servicebus_namespace" "servicebus_namespace" {
-  name                = local.servicebus_namespace_name
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  sku                 = "Standard"
-}
-
-resource "azurerm_servicebus_topic" "topic" {
-  name                  = "notyfications"
-  namespace_id          = azurerm_servicebus_namespace.servicebus_namespace.id
-  max_size_in_megabytes = 1024
-}
-
-resource "azurerm_servicebus_subscription" "veryficationEmail_subscription" {
-  name                                 = local.veryficationEmail_subscription_name
-  topic_id                             = azurerm_servicebus_topic.topic.id
-  max_delivery_count                   = 1
-  dead_lettering_on_message_expiration = true
-}
-
-resource "azurerm_servicebus_subscription" "newsletter_subscription" {
-  name                                 = local.newsletter_subscription_name
-  topic_id                             = azurerm_servicebus_topic.topic.id
-  max_delivery_count                   = 1
-  dead_lettering_on_message_expiration = true
-}
-
-resource "azurerm_servicebus_subscription_rule" "newsletter_subscription_rule" {
-  name            = local.newsletter_newsletter_filter_name
-  subscription_id = azurerm_servicebus_subscription.newsletter_subscription.id
-  filter_type     = "CorrelationFilter"
-
-  correlation_filter {
-    properties = {
-      isNewsletterSubscriber = "True"
-    }
-  }
+module "serviceBus" {
+  source                  = "./modules/serviceBus"
+  resource_group_name     = azurerm_resource_group.rg.name
+  resource_group_location = azurerm_resource_group.rg.location
+  identity_name           = local.identity
+  short_location          = local.short_location
 }
 
 resource "azurerm_storage_account" "createUser_fapp_storage_account" {
@@ -74,6 +69,6 @@ resource "azurerm_windows_function_app" "createUser_fapp" {
   }
 
   app_settings = {
-    "ServiceBus:ConnectionString" = azurerm_servicebus_namespace.servicebus_namespace.default_primary_connection_string
+    "ServiceBus:ConnectionString" = module.serviceBus.servicebus_default_primary_connection_string
   }
 }
