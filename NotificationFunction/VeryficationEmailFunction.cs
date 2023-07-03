@@ -1,11 +1,11 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using NotyficationFunction.Constants;
-using NotyficationFunction.Email;
-using NotyficationFunction.Messages;
+using NotificationFunction.Constants;
+using NotificationFunction.Email;
+using NotificationFunction.Messages;
 using System.Text.Json;
 
-namespace NotyficationFunction
+namespace NotificationFunction
 {
     public class VeryficationEmailFunction
     {
@@ -19,7 +19,7 @@ namespace NotyficationFunction
         }
 
         [Function("VeryficationEmail")]
-        public async Task Run([ServiceBusTrigger(Topic.Notyfication, Subscription.VeryficationEmail, Connection = "ServiceBusConnection")] string mySbMsg)
+        public async Task Run([ServiceBusTrigger(Topic.Notification, Subscription.VeryficationEmail, Connection = "ServiceBusConnection")] string mySbMsg)
         {
             _logger.LogInformation($"Start processing veryficationEmail action...");
 

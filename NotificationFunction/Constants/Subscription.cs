@@ -1,4 +1,4 @@
-﻿namespace NotyficationFunction.Constants;
+﻿namespace NotificationFunction.Constants;
 
 internal class Subscription
 {

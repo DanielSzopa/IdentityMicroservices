@@ -1,6 +1,6 @@
 ﻿using YourTutor.Application.Models.EmailBase;
 
-namespace NotyficationFunction.Email;
+namespace NotificationFunction.Email;
 
 internal class Newsletter : EmailBase
 {

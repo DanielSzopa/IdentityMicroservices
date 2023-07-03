@@ -1,10 +1,10 @@
 ﻿using FluentEmail.Core;
 using FluentEmail.SendGrid;
 using Microsoft.Extensions.Options;
-using NotyficationFunction.Settings;
+using NotificationFunction.Settings;
 using YourTutor.Application.Models.EmailBase;
 
-namespace NotyficationFunction.Email;
+namespace NotificationFunction.Email;
 
 public class EmailSender : IEmailSender
 {

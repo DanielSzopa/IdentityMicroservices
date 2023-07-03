@@ -1,11 +1,11 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using NotyficationFunction.Constants;
-using NotyficationFunction.Email;
-using NotyficationFunction.Messages;
+using NotificationFunction.Constants;
+using NotificationFunction.Email;
+using NotificationFunction.Messages;
 using System.Text.Json;
 
-namespace NotyficationFunction
+namespace NotificationFunction
 {
     public class NewsletterFunction
     {
@@ -19,7 +19,7 @@ namespace NotyficationFunction
         }
 
         [Function("Newsletter")]
-        public async Task Run([ServiceBusTrigger(Topic.Notyfication, Subscription.Newsletter, Connection = "ServiceBusConnection")] string mySbMsg)
+        public async Task Run([ServiceBusTrigger(Topic.Notification, Subscription.Newsletter, Connection = "ServiceBusConnection")] string mySbMsg)
         {
             _logger.LogInformation($"Start processing newsletter action...");
 
