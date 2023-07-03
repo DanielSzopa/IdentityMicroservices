@@ -7,7 +7,7 @@ resource "azurerm_servicebus_namespace" "servicebus_namespace" {
 }
 
 resource "azurerm_servicebus_topic" "topic" {
-  name                  = "notyfications"
+  name                  = local.topic_name
   namespace_id          = azurerm_servicebus_namespace.servicebus_namespace.id
   max_size_in_megabytes = 1024
 }

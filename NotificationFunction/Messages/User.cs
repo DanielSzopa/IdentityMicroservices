@@ -1,4 +1,4 @@
-﻿namespace NotyficationFunction.Messages
+﻿namespace NotificationFunction.Messages
 {
     public class User
     {

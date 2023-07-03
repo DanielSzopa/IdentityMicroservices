@@ -1,4 +1,4 @@
-﻿namespace NotyficationFunction.Settings;
+﻿namespace NotificationFunction.Settings;
 
 public class SendGridSettings
 {

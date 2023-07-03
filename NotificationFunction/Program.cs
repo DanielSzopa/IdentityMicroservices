@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NotyficationFunction.Email;
-using NotyficationFunction.Settings;
+using NotificationFunction.Email;
+using NotificationFunction.Settings;
 using System.Reflection;
 
 var host = new HostBuilder()

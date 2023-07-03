@@ -19,7 +19,7 @@ locals {
 }
 
 locals {
-  topic_name                          = "notyfications"
+  topic_name                          = "notifications"
   veryficationEmail_subscription_name = "veryficationEmail"
   newsletter_subscription_name        = "newsletter"
   newsletter_newsletter_filter_name   = "newsletterFilter"
